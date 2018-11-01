@@ -112,6 +112,9 @@
       this.initialize = function() {
         this.openEl.addEventListener('click', this.openMenu.bind(this));
         this.mobileNavOverlay.addEventListener('click', this.closeMenu.bind(this));
+        this.mobileNavOverlay.addEventListener('touchstart', this.touchStart.bind(this));
+        this.mobileNavOverlay.addEventListener('touchmove', this.touchMove.bind(this));
+        this.mobileNavOverlay.addEventListener('touchend', this.touchEnd.bind(this));
         this.mobileNav.querySelectorAll('a').forEach(n => {
           n.addEventListener('click', this.closeMenu.bind(this));
         });
@@ -143,9 +146,10 @@
             this.mobileNav.style.transform = 'translateX(0px)';
             // We need to reset touchX somehow.
             // To ignore touchend?
-
+            this.touchX = 0;
           } else if (diff <= this.touchThresMin) {
-            this.mobileNav.style.transform = 'translateX(' + this.initialTranslate
+            this.mobileNav.style.transform = 'translateX(' + this.initialTranslate + ')';
+            this.touchX = 0;
           } else {
             this.mobileNav.style.transform = 'translateX(-' + diff + 'px)';
           }
@@ -156,7 +160,10 @@
         // in which case we have nothing to do.
         // Otherwise, reset the translation on the
         // navbar.
-
+        if (this.touchX) {
+          // Reset:
+          this.mobileNav.style.transform = 'translateX(' + this.initialTranslate + ')';
+        }
       }
     }
 
