@@ -102,6 +102,13 @@
       this.mobileNav = mobileNav;
       this.mobileNavOverlay = mobileNavOverlay;
       this.openEl = openEl;
+      this.initialTranslate = '-110px';
+      this.touchX = 0;
+      this.width = mobileNav.offsetWidth;
+      // Doing most of the calculations now rather than in
+      // the touch event listeners:
+      this.touchThresMin = Math.ceil(this.width * 0.1);
+      this.touchThresMax = this.width - this.touchThresMin;
       this.initialize = function() {
         this.openEl.addEventListener('click', this.openMenu.bind(this));
         this.mobileNavOverlay.addEventListener('click', this.closeMenu.bind(this));
@@ -115,12 +122,48 @@
       };
       this.closeMenu = function() {
         this.mobileNavOverlay.style.display = 'none';
-        this.mobileNav.style.transform = 'translateX(-110%)';
+        this.mobileNav.style.transform = 'translateX(' + this.initialTranslate +  ')';
       };
+      this.touchStart = function(e) {
+        e.preventDefault();
+        this.touchX = parseInt(e.changedTouches[0].clientX);
+        // TODO We might have to remove the transition here,
+        // and put it back at the touchend event.
+      };
+      this.touchMove = function(e) {
+        e.preventDefault();
+        // We can move up to a certain threshold of
+        // this.mobileNav.offsetWidth.
+        const cur = parseInt(e.changedTouches[0].clientX);
+        const diff = this.touchX - cur;
+        if (diff > 0) {
+          // We're sliding to the left.
+          // We want to ignore sliding to the right.
+          if (diff >= this.touchThresMax) {
+            this.mobileNav.style.transform = 'translateX(0px)';
+            // We need to reset touchX somehow.
+            // To ignore touchend?
+
+          } else if (diff <= this.touchThresMin) {
+            this.mobileNav.style.transform = 'translateX(' + this.initialTranslate
+          } else {
+            this.mobileNav.style.transform = 'translateX(-' + diff + 'px)';
+          }
+        }
+      };
+      this.touchEnd = function(e) {
+        // Check if we're already full translated,
+        // in which case we have nothing to do.
+        // Otherwise, reset the translation on the
+        // navbar.
+
+      }
     }
 
     const myNav = new MySuperNav(mobileNav, mobileNavOverlay, openEl);
     myNav.initialize();
+
+    console.log(myNav.prototype);
 
   </script>
 </body>
