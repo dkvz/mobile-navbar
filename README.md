@@ -1,5 +1,5 @@
 ## Analysing
-WIth Materialize they use a <ul> element with this style:
+WIth Materialize they use a `<ul>` element with this style:
 ```
 backface-visibility: hidden;
 background-color: rgb(255, 255, 255);
@@ -47,8 +47,17 @@ As shown in the investigation above, Materialize uses `will-change: transform`.
 
 I'm confused however because on the MDN page they're saying you shouldn't use this unless absolutely necessary or something (see here: https://developer.mozilla.org/en-US/docs/Web/CSS/will-change).
 
-## Closing on gestures
-I'm not sure how to do this. I'm not even sure if we need this.
+## Gestures
+There are 3 gesture events to register:
+* touchstart
+* touchmove
+* touchend
+
+For each of these the event has a changedTouches array, we need to access the first element of that array to get the coordinates. Which I think are called clientX and clientY. These are strings with a trailing "px", so bear that in mind if you need to do calculation.
+
+I think parseInt works, maybe Number does as well.
+
+-> You need to add preventDefault for touchstart and touchmove (and maybe touchend), or at the very least touchmove so that these events do not register a click as well.
 
 ## Menu height
 The easiest is to use viewport units and set it to 100vh.
