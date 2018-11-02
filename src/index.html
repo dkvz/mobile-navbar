@@ -12,7 +12,7 @@
       margin: 0;
     }
     header {
-      height: 200px;
+      height: 180px;
       border-bottom: solid 4px black;
       background-color: darkred;
       color: white;
@@ -61,7 +61,7 @@
     #mobileNavOverlay {
       display: none;
       background-color: rgba(0, 0, 0, 0.65);
-      position: absolute;
+      position: fixed;
       left: 0;
       top: 0;
       height: 100vh;
@@ -87,6 +87,7 @@
   </header>
   <main>
     <h1>Main section</h1>
+    <p>Click count: <span id="clickCount"></span></p>
     <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Laboriosam facilis sunt corporis ad illo tempora aut rerum unde, consequatur architecto sint rem eveniet? Ratione non, dolores deserunt cupiditate porro culpa reprehenderit minus voluptates hic veniam et sunt rem illo laudantium eligendi repudiandae nesciunt sapiente commodi? Quidem aut libero iure similique sunt velit eius porro! Neque, voluptatum aliquam! Itaque aperiam quasi quam, delectus fugiat eos cumque incidunt labore veniam consectetur natus eligendi vitae, odit, libero repellendus repudiandae obcaecati corporis repellat minima quos! Minima cum omnis officia, distinctio consequatur dicta neque, maxime, necessitatibus quam molestias recusandae nihil. Assumenda incidunt aliquid soluta magni?</p>
     <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Cumque quasi soluta tenetur placeat optio eos quo nobis, maiores aspernatur debitis doloribus aperiam saepe expedita dolorum sit perspiciatis reprehenderit minus ipsa dolores omnis accusantium sequi quis nulla. Aliquam, consequatur quidem molestiae, quod, reprehenderit porro veniam labore blanditiis magni ipsa quo fuga!</p>
   </main>
@@ -94,6 +95,7 @@
     const mobileNav = document.getElementById('mobileNav');
     const mobileNavOverlay = document.getElementById('mobileNavOverlay');
     const openEl = document.getElementById('menuBtn');
+    const clickCount = document.getElementById('clickCount');
 
     function MySuperNav(mobileNav, mobileNavOverlay, openEl) {
       this.mobileNav = mobileNav;
@@ -125,13 +127,11 @@
         this.mobileNav.style.transform = 'translateX(' + this.initialTranslate +  ')';
       };
       this.touchStart = function(e) {
-        //e.preventDefault();
         this.touchX = parseInt(e.changedTouches[0].clientX);
         // TODO We might have to remove the transition here,
         // and put it back at the touchend event.
       };
       this.touchMove = function(e) {
-        //e.preventDefault();
         // We can move up to a certain threshold of
         // this.mobileNav.offsetWidth.
         const cur = parseInt(e.changedTouches[0].clientX);
@@ -157,8 +157,6 @@
         }
       };
       this.touchEnd = function(e) {
-        // Not sur if I need this:
-        //e.preventDefault();
         // Check if we're already full translated,
         // in which case we have nothing to do.
         // Otherwise, reset the translation on the
@@ -173,8 +171,9 @@
     const myNav = new MySuperNav(mobileNav, mobileNavOverlay, openEl);
     myNav.initialize();
 
+    let clicks = 0;
     document.getElementById('testLink').addEventListener('click', _ => {
-      console.log('Clicked test link.');
+      clickCount.textContent = ++clicks;
     });
 
   </script>

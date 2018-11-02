@@ -65,6 +65,8 @@ Ignoring ‘preventDefault()’ call on event of type ‘touchstart’ from a li
 ```
 Not sure what they mean here.
 
+I removed all the preventDefault at some point. I don't think it's needed at all.
+
 ## Menu height
 The easiest is to use viewport units and set it to 100vh.
 
@@ -74,6 +76,8 @@ On my site I have body min-height set to 100vh and a flex layout to display the 
 
 ## The overlay
 There's more than one way to do the mobile menu, Materialize creates an overlay div to have the transparent grey background.
+
+Problem: on mobile, when both sliding in the menu and scrolling, the overlay stays at the top. I think we might have to position: fixed the thing.
 
 ## Drop shadow
 You can use a drop-shadow but then the translate has to go further to the left.
@@ -98,7 +102,11 @@ Solved this by not applying styles on li (only on a).
 
 The link click event still isn't firing right when using gestures. Don't know if it's just on the Firefox inspector, I'll assume it's a general issue with the click not happening when handling gestures.
 
-This may be linked to how taps are captured?
+This may be linked to how taps are captured? Clicking the link always works unless we are on mobile mode in the Firefox inspector. It works fine on the Chrome inspector, haven't tried on a mobile.
+
+OK it works even for Firefox on mobile. I think we're fine like this.
+
+-> Link issue resolved.
 
 ## Media queries
 I think we only need media queries to hide the button that shows the menu.
