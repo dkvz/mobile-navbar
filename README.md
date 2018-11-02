@@ -59,6 +59,12 @@ I think parseInt works, maybe Number does as well.
 
 -> You need to add preventDefault for touchstart and touchmove (and maybe touchend), or at the very least touchmove so that these events do not register a click as well.
 
+I should address this message:
+```
+Ignoring ‘preventDefault()’ call on event of type ‘touchstart’ from a listener registered as ‘passive’.
+```
+Not sure what they mean here.
+
 ## Menu height
 The easiest is to use viewport units and set it to 100vh.
 
@@ -84,6 +90,15 @@ If using an overlay, closing the menu is easy: just bind a click event to the ov
 Without overlay something has to be done with body. But a body click event will always fire as far as I know. Which is annoying.
 
 Clicking any link inside the menu should also close the menu, so we need to bind an event listener for that on every single link at initialization.
+
+### Issues with my links
+Clicking a li element in the nav list acutally closes the menu without doing anything. We should have a click on the li proc a click on the child link... Or maybe not close the men once we click inside the menu thing.
+
+Solved this by not applying styles on li (only on a).
+
+The link click event still isn't firing right when using gestures. Don't know if it's just on the Firefox inspector, I'll assume it's a general issue with the click not happening when handling gestures.
+
+This may be linked to how taps are captured?
 
 ## Media queries
 I think we only need media queries to hide the button that shows the menu.

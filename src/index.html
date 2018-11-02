@@ -35,16 +35,10 @@
       overflow-y: auto;
       z-index: 999;
       width: 300px;
-      transition: transform 1.2s;
+      transition: transform 0.8s;
       /* Increase the translation if using a shadow */
       transform: translateX(-110%);
       height: 100vh;
-    }
-
-    #mobileNav li {
-      padding-left: 20px;
-      padding-top: 15px;
-      padding-bottom: 15px;
     }
 
     #mobileNav a {
@@ -52,8 +46,11 @@
       font-weight: bolder;
       color: #222;
       display: block;
+      padding-left: 20px;
+      padding-top: 15px;
+      padding-bottom: 15px;
     }
-    #mobileNav li:hover {
+    #mobileNav a:hover {
       background-color: #ebebeb;
     }
 
@@ -80,7 +77,7 @@
     <button id="menuBtn">SHOW DA MENU</button>
     <ul id="mobileNav" class="shadow-that-might-look-bad">
       <li><a href="#">Menu item 1</a></li>
-      <li><a href="#">Menu item 2</a></li>
+      <li><a href="#" id="testLink">Menu item 2</a></li>
       <li><a href="#">Menu item 3</a></li>
       <li><a href="#">Menu item 4</a></li>
       <li><a href="#">Menu item 5</a></li>
@@ -102,7 +99,7 @@
       this.mobileNav = mobileNav;
       this.mobileNavOverlay = mobileNavOverlay;
       this.openEl = openEl;
-      this.initialTranslate = '-110px';
+      this.initialTranslate = '-110%';
       this.touchX = 0;
       this.width = mobileNav.offsetWidth;
       // Doing most of the calculations now rather than in
@@ -112,9 +109,9 @@
       this.initialize = function() {
         this.openEl.addEventListener('click', this.openMenu.bind(this));
         this.mobileNavOverlay.addEventListener('click', this.closeMenu.bind(this));
-        this.mobileNavOverlay.addEventListener('touchstart', this.touchStart.bind(this));
-        this.mobileNavOverlay.addEventListener('touchmove', this.touchMove.bind(this));
-        this.mobileNavOverlay.addEventListener('touchend', this.touchEnd.bind(this));
+        document.body.addEventListener('touchstart', this.touchStart.bind(this));
+        document.body.addEventListener('touchmove', this.touchMove.bind(this));
+        document.body.addEventListener('touchend', this.touchEnd.bind(this));
         this.mobileNav.querySelectorAll('a').forEach(n => {
           n.addEventListener('click', this.closeMenu.bind(this));
         });
@@ -128,27 +125,31 @@
         this.mobileNav.style.transform = 'translateX(' + this.initialTranslate +  ')';
       };
       this.touchStart = function(e) {
-        e.preventDefault();
+        //e.preventDefault();
         this.touchX = parseInt(e.changedTouches[0].clientX);
         // TODO We might have to remove the transition here,
         // and put it back at the touchend event.
       };
       this.touchMove = function(e) {
-        e.preventDefault();
+        //e.preventDefault();
         // We can move up to a certain threshold of
         // this.mobileNav.offsetWidth.
         const cur = parseInt(e.changedTouches[0].clientX);
-        const diff = this.touchX - cur;
+        const diff = cur - this.touchX;
         if (diff > 0) {
-          // We're sliding to the left.
-          // We want to ignore sliding to the right.
+          // We're sliding to the right.
+          // We want to ignore sliding to the left.
+          // TODO We should not ignore sliding to the left
+          // once we started sliding to the right...
+          // We should also show the overlay:
+          this.mobileNavOverlay.style.display = 'block';
           if (diff >= this.touchThresMax) {
             this.mobileNav.style.transform = 'translateX(0px)';
             // We need to reset touchX somehow.
             // To ignore touchend?
             this.touchX = 0;
           } else if (diff <= this.touchThresMin) {
-            this.mobileNav.style.transform = 'translateX(' + this.initialTranslate + ')';
+            this.closeMenu();
             this.touchX = 0;
           } else {
             this.mobileNav.style.transform = 'translateX(-' + diff + 'px)';
@@ -156,13 +157,15 @@
         }
       };
       this.touchEnd = function(e) {
+        // Not sur if I need this:
+        //e.preventDefault();
         // Check if we're already full translated,
         // in which case we have nothing to do.
         // Otherwise, reset the translation on the
         // navbar.
         if (this.touchX) {
           // Reset:
-          this.mobileNav.style.transform = 'translateX(' + this.initialTranslate + ')';
+          this.closeMenu();
         }
       }
     }
@@ -170,7 +173,9 @@
     const myNav = new MySuperNav(mobileNav, mobileNavOverlay, openEl);
     myNav.initialize();
 
-    console.log(myNav.prototype);
+    document.getElementById('testLink').addEventListener('click', _ => {
+      console.log('Clicked test link.');
+    });
 
   </script>
 </body>
