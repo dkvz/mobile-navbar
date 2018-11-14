@@ -108,6 +108,9 @@
       // the touch event listeners:
       this.touchThresMin = Math.ceil(this.width * 0.1);
       this.touchThresMax = this.width - this.touchThresMin;
+      // These functions could be in a prototype.
+      // I'm not bothering because there is no reason to create
+      // more than one navbar so it doesn't really matter here.
       this.initialize = function() {
         this.openEl.addEventListener('click', this.openMenu.bind(this));
         this.mobileNavOverlay.addEventListener('click', this.closeMenu.bind(this));
